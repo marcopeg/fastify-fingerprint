@@ -1,3 +1,5 @@
+const cookie = require("cookie");
+
 const ACCEPT_HEADERS = [
   "connection",
   "host",
@@ -7,10 +9,25 @@ const ACCEPT_HEADERS = [
   "accept-language",
 ];
 
-module.exports = (headers = {}, accept = null, extend = []) =>
-  Object.keys(headers)
+module.exports = (
+  requestHeaders = {},
+  { acceptHeaders = null, extendHeaders = null, acceptCookies = null } = {}
+) => {
+  const headers = Object.keys(requestHeaders)
     .filter(
       (header) =>
-        (accept || ACCEPT_HEADERS).includes(header) || extend.includes(header)
+        (acceptHeaders || ACCEPT_HEADERS).includes(header) ||
+        (extendHeaders || []).includes(header)
     )
-    .map((header) => headers[header]);
+    .map((header) => requestHeaders[header]);
+
+  const requestCookies = requestHeaders["Cookie"]
+    ? cookie.parse(requestHeaders["Cookie"])
+    : {};
+
+  const cookies = Object.keys(requestCookies)
+    .filter((cookie) => (acceptCookies || []).includes(cookie))
+    .map((cookie) => requestCookies[cookie]);
+
+  return [...headers, ...cookies];
+};

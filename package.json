@@ -1,6 +1,6 @@
 {
   "name": "fastify-fingerprint",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate a header-based fingerprint of the request",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/marcopeg/fastify-fingerprint#readme",
   "dependencies": {
+    "cookie": "^0.4.2",
     "fastify-plugin": "^3.0.1"
   },
   "devDependencies": {

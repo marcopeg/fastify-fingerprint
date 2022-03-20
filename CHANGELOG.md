@@ -2,13 +2,36 @@
 
 ## ROADMAP
 
-### v1.1.0
+### v2.0.0
 
-- [x] Extend the default headers with a custom list of additional headers
-- [ ] Extend the fingerprint using a list of cookies names to be included in the hash
-- [ ] Set a number of randomic cookie with randomic values, then use only a few of those to decorate the fingerprint
+- [ ] Change the `fingerprint` String to an object `fingerprint.value`
+- [ ] Randomize the fingerprint (\*)
+
+#### (\*) Randomize the fingerprint
+
+NOTE: this will bring a breaking change as we will need
+
+```json
+{
+  "request": {
+    "fingerprint": {
+      "value": "xxx",
+      "next": "yyy"
+    }
+  }
+}
+```
+
+1. Generate a randomic number
+2. Calculate a "next" fingerprint that contains the current headers, plus the new randomic number
+3. Set the randomic header in the reply object
 
 ---
+
+## v1.1.0
+
+- Extend the default headers with a custom list of additional headers
+- Extend the fingerprint using a list of cookies names to be included in the hash
 
 ## v1.0.0
 

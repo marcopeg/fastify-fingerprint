@@ -78,6 +78,24 @@ fastify.register(fingerprint, {
 });
 ```
 
+### acceptCookies
+
+Let you add information from specific cookies into the fingerprint.
+
+```
+type:    [String!]
+```
+
+Example:
+
+```js
+const fingerprint = require("fastify-fingerprint");
+
+fastify.register(fingerprint, {
+  acceptCookies: ["app-name"],
+});
+```
+
 ### hashFn
 
 Let you customize the hash function.

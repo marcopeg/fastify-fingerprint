@@ -37,7 +37,9 @@ describe("Filter Headers", () => {
         "accept-encoding": "e",
         "accept-language": "f",
       },
-      ["host", "accept"]
+      {
+        acceptHeaders: ["host", "accept"],
+      }
     );
 
     expect(res).toMatchObject(["b", "d"]);
@@ -50,10 +52,23 @@ describe("Filter Headers", () => {
         host: "b",
         "x-foo": "c",
       },
-      null,
-      ["x-foo"]
+      {
+        extendHeaders: ["x-foo"],
+      }
     );
 
     expect(res).toMatchObject(["a", "b", "c"]);
+  });
+
+  it("Should add values from cookies", () => {
+    const res = filterHeaders(
+      {
+        host: "a",
+        Cookie: "b=b; c=c",
+      },
+      { acceptCookies: ["b"] }
+    );
+
+    expect(res).toMatchObject(["a", "b"]);
   });
 });

@@ -110,5 +110,37 @@ describe("fastify-fingerprint", () => {
       expect(rq1.fingerprint).not.toEqual(rq2.fingerprint);
       expect(rq2.fingerprint).not.toEqual(rq3.fingerprint);
     });
+
+    it("Should accept cookies", async () => {
+      const { request: rq1 } = await fakeRequest({
+        headers: {
+          "user-agent": "foobar",
+          Cookie: "a=a; b=b;",
+        },
+      });
+
+      const { request: rq2 } = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            Cookie: "a=a; b=b;",
+          },
+        },
+        { acceptCookies: ["a"] }
+      );
+
+      const { request: rq3 } = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            Cookie: "a=a1; b=b;",
+          },
+        },
+        { acceptCookies: ["a"] }
+      );
+
+      expect(rq1.fingerprint).not.toEqual(rq2.fingerprint);
+      expect(rq2.fingerprint).not.toEqual(rq3.fingerprint);
+    });
   });
 });

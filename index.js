@@ -8,17 +8,19 @@ module.exports = fp(
     {
       acceptHeaders = undefined,
       extendHeaders = undefined,
+      acceptCookies = undefined,
       requestKey = "fingerprint",
       hashFn = defaultHashFn,
     } = {},
     next
   ) => {
     const preValidation = async (request) => {
-      const values = filterHeaders(
-        request.headers,
+      const values = filterHeaders(request.headers, {
         acceptHeaders,
-        extendHeaders
-      );
+        extendHeaders,
+        acceptCookies,
+      });
+
       request[requestKey] = hashFn(values);
     };
 

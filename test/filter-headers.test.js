@@ -42,4 +42,18 @@ describe("Filter Headers", () => {
 
     expect(res).toMatchObject(["b", "d"]);
   });
+
+  it("Should accept an extended list of headers", () => {
+    const res = filterHeaders(
+      {
+        connection: "a",
+        host: "b",
+        "x-foo": "c",
+      },
+      null,
+      ["x-foo"]
+    );
+
+    expect(res).toMatchObject(["a", "b", "c"]);
+  });
 });

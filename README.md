@@ -56,8 +56,26 @@ Let you customize which headers to accept in the fingerprint.
 > Default values comes [from here](https://privacycheck.sec.lrz.de/passive/fp_hs/fp_header_signature.php).
 
 ```
-type:    Array
+type:    [String!]
 default: see src/filter-headers.js
+```
+
+### extendHeaders
+
+Let you extend the default list of headers with new ones:
+
+```
+type:    [String!]
+```
+
+Example:
+
+```js
+const fingerprint = require("fastify-fingerprint");
+
+fastify.register(fingerprint, {
+  extendHeaders: ["x-foobar", "x-hohoho"],
+});
 ```
 
 ### hashFn
@@ -69,6 +87,17 @@ Let you customize the hash function.
 ```
 type:    Function
 default: see src/hash.js
+```
+
+---
+
+## Contribute & Develop
+
+Please contribute to this library by running test, adding features and fixing bugs 🙏.
+
+```js
+npm install
+npm run tdd
 ```
 
 ---

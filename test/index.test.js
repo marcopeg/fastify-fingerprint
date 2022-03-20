@@ -46,30 +46,69 @@ describe("fastify-fingerprint", () => {
     expect(fastify.decorateRequest.mock.calls[0][0]).toBe("foo");
   });
 
-  it("Should actually work", () => {
-    const request = {
-      headers: {
-        "user-agent": "foobar",
-      },
+  describe("Testing a full instance", () => {
+    class Fastify {
+      constructor() {
+        this.hooks = {};
+        this.request = {};
+
+        this.decorateRequest = jest.fn((key, value) => {
+          this.request[key] = value;
+        });
+
+        this.addHook = jest.fn((key, value) => {
+          this.hooks[key] = value;
+        });
+      }
+
+      // Fake the request lifecycle
+      async fakeRequest(request = {}) {
+        this.request = request;
+        await this.hooks.preValidation(this.request);
+        return this;
+      }
+    }
+
+    const fakeRequest = (requestConfig, pluginConfig) => {
+      const fastify = new Fastify();
+      plugin(fastify, pluginConfig, () => {});
+      return fastify.fakeRequest(requestConfig);
     };
-    const hooks = {};
 
-    // Create the Jest interface
-    const next = jest.fn();
-    const fastify = {
-      decorateRequest: jest.fn((key, value) => {
-        request[key] = value;
-      }),
-      addHook: jest.fn((key, value) => {
-        hooks[key] = value;
-      }),
-    };
+    it("Should accept extended headers", async () => {
+      const { request: rq1 } = await fakeRequest({
+        headers: {
+          "user-agent": "foobar",
+          "x-foo": "hoho",
+        },
+      });
 
-    // Run the plugin
-    plugin(fastify, undefined, next);
-    hooks.preValidation(request);
+      const { request: rq2 } = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            "x-foo": "hoho",
+          },
+        },
+        {
+          extendHeaders: ["x-foo"],
+        }
+      );
 
-    // Validate
-    expect(request.fingerprint.length).toBe(32);
+      const { request: rq3 } = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            "x-foo": "haha",
+          },
+        },
+        {
+          extendHeaders: ["x-foo"],
+        }
+      );
+
+      expect(rq1.fingerprint).not.toEqual(rq2.fingerprint);
+      expect(rq2.fingerprint).not.toEqual(rq3.fingerprint);
+    });
   });
 });

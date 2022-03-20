@@ -7,7 +7,10 @@ const ACCEPT_HEADERS = [
   "accept-language",
 ];
 
-module.exports = (headers = {}, accept = ACCEPT_HEADERS) =>
+module.exports = (headers = {}, accept = null, extend = []) =>
   Object.keys(headers)
-    .filter((header) => accept.includes(header))
+    .filter(
+      (header) =>
+        (accept || ACCEPT_HEADERS).includes(header) || extend.includes(header)
+    )
     .map((header) => headers[header]);

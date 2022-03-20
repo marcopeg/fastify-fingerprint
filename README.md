@@ -85,7 +85,7 @@ Here is an example of a normal login, or session management:
 
 🧐 What is the risk here?
 
-🚧 IF a potential attacker manages to steal the session'c cookie, they will be able to run authenticated malicious requests.
+🚧 IF a potential attacker manages to steal the Session's cookie, they will be able to run authenticated malicious requests.
 
 > You can mitigate this risk by using http-only, signed, scoped, and secure cookies.
 
@@ -93,25 +93,36 @@ Here is an example of a normal login, or session management:
 
 > A Fingerprinted Session Management bind the session to the client's fingerprint, adding a layer of security for which the attacker needs to steal the session's cookie, and to replicate all the headers that are normally sent by the client.
 
-Here is an example of a safe login, or session management, with client's fingerprinting as an added layer of security.
+Here is an example of a safe login, or session management, with client's fingerprinting as an added layer of security:
 
 ![fingerprinted session management](./docs//session-management-fingerprinted.png)
 
-The whole point is to use as much client-driven information as possibile to compute a hashed ClientID for which **THE SAME CLIENT WILL GENERATE THE SAME HASH**.
+The whole point is to use as much client-driven information as possibile to compute a
+hashed ClientID for which **THE SAME CLIENT WILL GENERATE THE SAME HASH**.
 
-🔥 Even a small change in the client's sent headers will produce a different ClientID and therefore invalidate the Session.
+👉 The User will send the **Session cookie AS CLAIM** to use a particular session, but that claim
+will be verified with the fingerprint as so to **make sure it COMES FROM THE SAME REQUESTER**.
 
-> This strategy is very similar to what is used for validating online banking transaction, or digital signatures.
+🔥 Even a small change in the client's sent headers will produce a different ClientID
+and therefore invalidate the Session.
+
+> This strategy is very similar to what is used for validating online banking transaction,
+> or digital signatures.
 
 ### Even Stronger
 
-A possible way to make this airtight works as follow.
+A possible way to make this airtight works as follow:
 
-1. The server generates at boot time a list of randomic key/values that are sent out **as response headers**
+1. The server generates at boot time a list of randomic key/values that are sent
+   out **as response headers**
 2. The client always sends back all those informations **as request headers**
-3. The server randomly chooses at boot time **some** of those headers and includes them in the fingerprint calculation
-4. Every time a session is validated, the random values rotates, and the Session's fingerprint is updated in the DB
+3. The server randomly chooses at boot time **some** of those headers and includes
+   them in the fingerprint calculation
+4. Every time a session is validated, the random values rotates, and the Session's
+   fingerprint is updated in the DB
 
-😎 With this stratagem in place, even if the attacker is able to steal every header from the user's browser, they will still constantly rotate so the attacker will never be able to replay a valid set of headers.
+😎 With this stratagem in place, even if the attacker is able to steal every header
+from the user's browser, they will still constantly rotate so the attacker will never be able to replay a valid set of headers.
 
-> The only possibility for a session spoofing, is for the attacke to aim a gun to your head and phisically steal your keyboard!!!
+> The only possibility for a session spoofing, is for the attackeR to aim a gun to your
+> head and phisically steal your user's keyboard!!!

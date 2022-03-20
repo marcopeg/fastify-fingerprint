@@ -4,7 +4,7 @@
 
 [![NPM](https://img.shields.io/npm/v/fastify-fingerprint?color=red)](https://www.npmjs.com/package/fastify-fingerprint)
 [![MIT License](https://img.shields.io/github/license/marcopeg/fastify-fingerprint.svg?color=blue)](https://github.com/marcopeg/fastify-fingerprint/blob/master/LICENSE)
-[![Continuous Integration](https://github.com/marcopeg/fastify-fingerprint/workflows/Continuous%20Integration/badge.svg?branch=next)](https://github.com/marcopeg/fastify-fingerprint/actions)
+![CI/CD](https://github.com/marcopeg/fastify-fingerprint/actions/workflows/npm-publish.yml/badge.svg)
 
 </div>
 

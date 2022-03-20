@@ -2,8 +2,8 @@
 
 <div align="center">
 
-[![NPM](https://img.shields.io/npm/v/fastify-fingerprint?color=red)](https://www.npmjs.com/package/fastify-fingerprint)
 [![MIT License](https://img.shields.io/github/license/marcopeg/fastify-fingerprint.svg?color=blue)](https://github.com/marcopeg/fastify-fingerprint/blob/master/LICENSE)
+[![npm version](https://badge.fury.io/js/fastify-fingerprint.svg)](https://badge.fury.io/js/fastify-fingerprint)
 ![CI/CD](https://github.com/marcopeg/fastify-fingerprint/actions/workflows/npm-publish.yml/badge.svg)
 
 </div>

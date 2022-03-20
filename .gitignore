@@ -1,0 +1,5 @@
+.DS_Store
+
+# Local dependencies
+node_modules
+.npmrc

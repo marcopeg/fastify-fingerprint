@@ -1,0 +1,36 @@
+{
+  "name": "fastify-fingerprint",
+  "version": "0.1.0",
+  "description": "Generate a header-based fingerprint of the request",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --runInBand",
+    "tdd": "jest --watchAll --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcopeg/fastify-fingerprint.git"
+  },
+  "keywords": [
+    "fastify",
+    "fingerprint",
+    "tracing",
+    "security",
+    "privacy"
+  ],
+  "author": "Marco Pegoraro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcopeg/fastify-fingerprint/issues"
+  },
+  "homepage": "https://github.com/marcopeg/fastify-fingerprint#readme",
+  "dependencies": {
+    "fastify-plugin": "^3.0.1"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

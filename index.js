@@ -1,6 +1,7 @@
 const fp = require("fastify-plugin");
 const defaultHashFn = require("./src/hash");
-const filterHeaders = require("./src/filter-headers");
+const filterHeadersFn = require("./src/filter-headers");
+const rewriteHeadersFn = require("./src/rewrite-headers");
 
 module.exports = fp(
   (
@@ -8,6 +9,7 @@ module.exports = fp(
     {
       acceptHeaders = undefined,
       extendHeaders = undefined,
+      rewriteHeaders = undefined,
       acceptCookies = undefined,
       requestKey = "fingerprint",
       hashFn = defaultHashFn,
@@ -15,11 +17,14 @@ module.exports = fp(
     next
   ) => {
     const preValidation = async (request) => {
-      const values = filterHeaders(request.headers, {
-        acceptHeaders,
-        extendHeaders,
-        acceptCookies,
-      });
+      const values = rewriteHeadersFn(
+        filterHeadersFn(request.headers, {
+          acceptHeaders,
+          extendHeaders,
+          acceptCookies,
+        }),
+        rewriteHeaders
+      );
 
       request[requestKey] = hashFn(values);
     };

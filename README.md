@@ -78,6 +78,26 @@ fastify.register(fingerprint, {
 });
 ```
 
+### rewriteHeaders
+
+Let you modify the some of the headers that are sent to Fastify.
+
+> Use it when you know that a subsequent call will implement a particular header and you want to create a future-proof fingerprint.
+
+```
+type:    [String!]
+```
+
+Example:
+
+```js
+const fingerprint = require("fastify-fingerprint");
+
+fastify.register(fingerprint, {
+  rewriteHeaders: ["x-foobar", "x-hohoho"],
+});
+```
+
 ### acceptCookies
 
 Let you add information from specific cookies into the fingerprint.

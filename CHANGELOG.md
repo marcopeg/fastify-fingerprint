@@ -28,6 +28,10 @@ NOTE: this will bring a breaking change as we will need
 
 ---
 
+## v1.2.0
+
+- Add `rewriteHeaders` option
+
 ## v1.1.0
 
 - Extend the default headers with a custom list of additional headers

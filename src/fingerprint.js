@@ -1,10 +1,12 @@
 const defaultHashFn = require("./hash");
 const filterHeadersFn = require("./filter-headers");
 const rewriteHeadersFn = require("./rewrite-headers");
+const sortHeadersFn = require("./sort-headers");
 
 module.exports = (
   headers = {},
   {
+    sortHeaders = false,
     acceptHeaders = undefined,
     extendHeaders = undefined,
     rewriteHeaders = undefined,
@@ -12,13 +14,16 @@ module.exports = (
     hashFn = defaultHashFn,
   } = {}
 ) => {
-  const values = rewriteHeadersFn(
-    filterHeadersFn(headers, {
-      acceptHeaders,
-      extendHeaders,
-      acceptCookies,
-    }),
-    rewriteHeaders
+  const values = sortHeadersFn(
+    rewriteHeadersFn(
+      filterHeadersFn(headers, {
+        acceptHeaders,
+        extendHeaders,
+        acceptCookies,
+      }),
+      rewriteHeaders
+    ),
+    sortHeaders
   );
 
   return hashFn(values);

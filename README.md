@@ -20,6 +20,8 @@ Although this is certainly true, fingerprinting **CAN BE USED TO INCREASE A SYST
 
 ## Usage
 
+Add this library as Fastify plugin:
+
 ```js
 const fingerprint = require("fastify-fingerprint");
 
@@ -32,6 +34,21 @@ fastify.route({
   url: "/fingerprint",
   handler: (request, reply) => {
     reply.send(`ClientID: ${request.fingerprint}`);
+  },
+});
+```
+
+Use it with plain API:
+
+```js
+const fingerprint = require("fastify-fingerprint");
+
+fastify.route({
+  method: "GET",
+  url: "/fingerprint",
+  handler: (request, reply) => {
+    const clientId = fingerprint.hash(request.headers, { ...options });
+    reply.send(`ClientID: ${clientId}`);
   },
 });
 ```

@@ -1,6 +1,6 @@
 {
   "name": "fastify-fingerprint",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Generate a header-based fingerprint of the request",
   "main": "index.js",
   "scripts": {

@@ -14,16 +14,13 @@ module.exports = (
     hashFn = defaultHashFn,
   } = {}
 ) => {
-  const values = sortHeadersFn(
-    rewriteHeadersFn(
-      filterHeadersFn(headers, {
-        acceptHeaders,
-        extendHeaders,
-        acceptCookies,
-      }),
-      rewriteHeaders
-    ),
-    sortHeaders
+  const values = filterHeadersFn(
+    sortHeadersFn(rewriteHeadersFn(headers, rewriteHeaders), sortHeaders),
+    {
+      acceptHeaders,
+      extendHeaders,
+      acceptCookies,
+    }
   );
 
   return hashFn(values);

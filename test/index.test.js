@@ -51,6 +51,12 @@ describe("fastify-fingerprint", () => {
       constructor() {
         this.hooks = {};
         this.request = {};
+        this.headers = {};
+        this.reply = {
+          header: jest.fn((key, val) => {
+            this.headers[key] = val;
+          }),
+        };
 
         this.decorateRequest = jest.fn((key, value) => {
           this.request[key] = value;
@@ -64,7 +70,7 @@ describe("fastify-fingerprint", () => {
       // Fake the request lifecycle
       async fakeRequest(request = {}) {
         this.request = request;
-        await this.hooks.preValidation(this.request);
+        await this.hooks.preValidation(this.request, this.reply);
         return this;
       }
     }
@@ -107,8 +113,8 @@ describe("fastify-fingerprint", () => {
         }
       );
 
-      expect(rq1.fingerprint).not.toEqual(rq2.fingerprint);
-      expect(rq2.fingerprint).not.toEqual(rq3.fingerprint);
+      expect(rq1.fingerprint.value).not.toEqual(rq2.fingerprint.value);
+      expect(rq2.fingerprint.value).not.toEqual(rq3.fingerprint.value);
     });
 
     it("Should accept cookies", async () => {
@@ -139,8 +145,53 @@ describe("fastify-fingerprint", () => {
         { acceptCookies: ["a"] }
       );
 
-      expect(rq1.fingerprint).not.toEqual(rq2.fingerprint);
-      expect(rq2.fingerprint).not.toEqual(rq3.fingerprint);
+      expect(rq1.fingerprint.value).not.toEqual(rq2.fingerprint.value);
+      expect(rq2.fingerprint.value).not.toEqual(rq3.fingerprint.value);
+    });
+
+    it("Should randomize a Header", async () => {
+      const i1 = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            Cookie: "a=a; b=b;",
+          },
+        },
+        {
+          randomizeHeader: "x-rand",
+        }
+      );
+
+      const i2 = await fakeRequest(
+        {
+          headers: {
+            "user-agent": "foobar",
+            Cookie: "a=a; b=b;",
+            "x-rand": i1.headers["x-rand"],
+          },
+        },
+        {
+          randomizeHeader: "x-rand",
+        }
+      );
+
+      expect(i1.request.fingerprint.next).toEqual(i2.request.fingerprint.value);
+
+      // The position of the "x-rand" header should not inficiate the calculation of the hash!
+      const i3 = await fakeRequest(
+        {
+          headers: {
+            "x-rand": i2.headers["x-rand"],
+            "user-agent": "foobar",
+            Cookie: "a=a; b=b;",
+          },
+        },
+        {
+          randomizeHeader: "x-rand",
+        }
+      );
+
+      expect(i2.request.fingerprint.next).toEqual(i3.request.fingerprint.value);
     });
   });
 });

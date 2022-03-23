@@ -19,7 +19,10 @@ module.exports = (
         (acceptHeaders || ACCEPT_HEADERS).includes(header) ||
         (extendHeaders || []).includes(header)
     )
-    .map((header) => requestHeaders[header]);
+    .reduce(
+      (acc, header) => ({ ...acc, [header]: requestHeaders[header] }),
+      {}
+    );
 
   const requestCookies = requestHeaders["Cookie"]
     ? cookie.parse(requestHeaders["Cookie"])
@@ -27,7 +30,13 @@ module.exports = (
 
   const cookies = Object.keys(requestCookies)
     .filter((cookie) => (acceptCookies || []).includes(cookie))
-    .map((cookie) => requestCookies[cookie]);
+    .reduce(
+      (acc, cookie) => ({ ...acc, [cookie]: requestCookies[cookie] }),
+      {}
+    );
 
-  return [...headers, ...cookies];
+  return {
+    headers,
+    cookies,
+  };
 };

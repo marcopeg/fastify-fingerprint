@@ -7,21 +7,49 @@ module.exports = fp(
     fastify,
     {
       acceptHeaders = undefined,
-      extendHeaders = undefined,
+      extendHeaders = [],
       acceptCookies = undefined,
       requestKey = "fingerprint",
+      randomizeHeader = undefined,
       hashFn = defaultHashFn,
     } = {},
     next
   ) => {
-    const preValidation = async (request) => {
+    const preValidation = async (request, reply) => {
       const values = filterHeaders(request.headers, {
         acceptHeaders,
-        extendHeaders,
+        extendHeaders: [
+          ...extendHeaders,
+          ...(randomizeHeader ? [randomizeHeader] : []),
+        ],
         acceptCookies,
       });
 
-      request[requestKey] = hashFn(values);
+      request[requestKey] = {
+        value: hashFn(values),
+      };
+
+      if (randomizeHeader) {
+        const randValue = Math.random();
+        const nextValues = {
+          ...values,
+          headers: {
+            ...values.headers,
+            [randomizeHeader]: randValue,
+          },
+        };
+
+        request[requestKey] = {
+          value: hashFn(values),
+          next: hashFn(nextValues),
+        };
+
+        reply.header(randomizeHeader, randValue);
+      } else {
+        request[requestKey] = {
+          value: hashFn(values),
+        };
+      }
     };
 
     fastify.decorateRequest(requestKey, null);

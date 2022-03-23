@@ -11,7 +11,17 @@ describe("Filter Headers", () => {
       "accept-language": "f",
     });
 
-    expect(res).toMatchObject(["a", "b", "c", "d", "e", "f"]);
+    expect(res).toMatchObject({
+      headers: {
+        connection: "a",
+        host: "b",
+        "user-agent": "c",
+        accept: "d",
+        "accept-encoding": "e",
+        "accept-language": "f",
+      },
+      cookies: {},
+    });
   });
 
   it("Should keep the headers order", () => {
@@ -24,7 +34,17 @@ describe("Filter Headers", () => {
       connection: "a",
     });
 
-    expect(res).toMatchObject(["f", "e", "d", "c", "b", "a"]);
+    expect(res).toMatchObject({
+      headers: {
+        "accept-language": "f",
+        "accept-encoding": "e",
+        accept: "d",
+        "user-agent": "c",
+        host: "b",
+        connection: "a",
+      },
+      cookies: {},
+    });
   });
 
   it("Should accept custom filter", () => {
@@ -42,22 +62,33 @@ describe("Filter Headers", () => {
       }
     );
 
-    expect(res).toMatchObject(["b", "d"]);
+    expect(res).toMatchObject({
+      headers: {
+        host: "b",
+        accept: "d",
+      },
+      cookies: {},
+    });
   });
 
   it("Should accept an extended list of headers", () => {
     const res = filterHeaders(
       {
         connection: "a",
-        host: "b",
-        "x-foo": "c",
+        "x-foo": "b",
       },
       {
         extendHeaders: ["x-foo"],
       }
     );
 
-    expect(res).toMatchObject(["a", "b", "c"]);
+    expect(res).toMatchObject({
+      headers: {
+        connection: "a",
+        "x-foo": "b",
+      },
+      cookies: {},
+    });
   });
 
   it("Should add values from cookies", () => {
@@ -69,6 +100,9 @@ describe("Filter Headers", () => {
       { acceptCookies: ["b"] }
     );
 
-    expect(res).toMatchObject(["a", "b"]);
+    expect(res).toMatchObject({
+      headers: { host: "a" },
+      cookies: { b: "b" },
+    });
   });
 });

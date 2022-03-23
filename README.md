@@ -66,6 +66,15 @@ type:    String
 default: "fingerprint"
 ```
 
+### sortHeaders
+
+Force the sorting of the headers keys
+
+```
+type:    Boolean
+default: false
+```
+
 ### acceptHeaders
 
 Let you customize which headers to accept in the fingerprint.

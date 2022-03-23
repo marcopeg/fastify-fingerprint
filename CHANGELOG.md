@@ -28,6 +28,10 @@ NOTE: this will bring a breaking change as we will need
 
 ---
 
+## v1.4.0
+
+- Add option to force sorting headers before hashing
+
 ## v1.3.0
 
 - Add the `fingerprint.hash(headers, [options])` top-level API

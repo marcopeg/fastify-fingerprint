@@ -1,32 +1,11 @@
 const fp = require("fastify-plugin");
-const defaultHashFn = require("./src/hash");
-const filterHeadersFn = require("./src/filter-headers");
-const rewriteHeadersFn = require("./src/rewrite-headers");
+const fingerprintFn = require("./src/fingerprint");
 
+// Export the plugin
 module.exports = fp(
-  (
-    fastify,
-    {
-      acceptHeaders = undefined,
-      extendHeaders = undefined,
-      rewriteHeaders = undefined,
-      acceptCookies = undefined,
-      requestKey = "fingerprint",
-      hashFn = defaultHashFn,
-    } = {},
-    next
-  ) => {
+  (fastify, { requestKey = "fingerprint", ...options } = {}, next) => {
     const preValidation = async (request) => {
-      const values = rewriteHeadersFn(
-        filterHeadersFn(request.headers, {
-          acceptHeaders,
-          extendHeaders,
-          acceptCookies,
-        }),
-        rewriteHeaders
-      );
-
-      request[requestKey] = hashFn(values);
+      request[requestKey] = fingerprintFn(request.headers, options);
     };
 
     fastify.decorateRequest(requestKey, null);
@@ -35,3 +14,6 @@ module.exports = fp(
     next();
   }
 );
+
+// Export the API
+module.exports.hash = fingerprintFn;

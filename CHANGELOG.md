@@ -28,6 +28,10 @@ NOTE: this will bring a breaking change as we will need
 
 ---
 
+## v1.3.0
+
+- Add the `fingerprint.hash(headers, [options])` top-level API
+
 ## v1.2.0
 
 - Add `rewriteHeaders` option
